@@ -1,10 +1,10 @@
 from player import Player
 
 
-class AllCooperate(Player):
+class Copycat(Player):
     def __init__(self):
         Player.__init__(self)
-        self.name = "AllCooperate"
+        self.name = "Copycat"
 
     def play(self):
-        self.choice.append('C')
+        print('test')

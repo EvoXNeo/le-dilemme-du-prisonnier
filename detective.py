@@ -1,10 +1,10 @@
 from player import Player
 
 
-class AllCooperate(Player):
+class Detective(Player):
     def __init__(self):
         Player.__init__(self)
-        self.name = "AllCooperate"
+        self.name = "Detective"
 
     def play(self):
-        self.choice.append('C')
+        print('test')
