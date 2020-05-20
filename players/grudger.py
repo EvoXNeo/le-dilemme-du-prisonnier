@@ -1,10 +1,10 @@
-from player import Player
+from players.player import Player
 
 
-class Detective(Player):
+class Grudger(Player):
     def __init__(self):
         Player.__init__(self)
-        self.name = "Detective"
+        self.name = "Grudger"
 
     def play(self):
         print('test')

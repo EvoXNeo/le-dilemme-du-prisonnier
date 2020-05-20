@@ -2,12 +2,12 @@
 Le dilemme du prisonnier
 @author: fabian devel - medhi louison - lucas cosson
 """
-from player import Player
-from allcheat import AllCheat
-from allcooperate import AllCooperate
-from copycat import Copycat
-from detective import Detective
-from grudger import Grudger
+from players.player import Player
+from players.allcheat import AllCheat
+from players.allcooperate import AllCooperate
+from players.copycat import Copycat
+from players.detective import Detective
+from players.grudger import Grudger
 
 
 def choosePlayer(number: str, size: int) -> int:
@@ -22,6 +22,16 @@ def choosePlayer(number: str, size: int) -> int:
     while player < 0 or player >= size:
         print("You should enter a number between 0 and " + str(size - 1))
         player = int(input())
+    if player == 0:
+        player = AllCheat()
+    elif player == 1:
+        player = AllCooperate()
+    elif player == 2:
+        player = Copycat()
+    elif player == 3:
+        player = Detective()
+    elif player == 4:
+        player = Grudger()
     return player
 
 
@@ -33,7 +43,7 @@ def turn(player1: Player, player2: Player, i: int):
     :param i: The number of the turn
     :return: None
     """
-    print("Turn {} :".format(i))
+    print("Turn {} :".format(i+1))
     player1.play()
     player2.play()
     gain(player1, player2)
