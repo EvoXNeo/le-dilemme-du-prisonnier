@@ -10,7 +10,7 @@ from players.detective import Detective
 from players.grudger import Grudger
 
 
-def choosePlayer(number: str, size: int) -> int:
+def choosePlayer(number: str, size: int) -> Player:
     """Return a player selected by the user
 
     :param number: The number of the player
@@ -43,9 +43,10 @@ def turn(player1: Player, player2: Player, i: int):
     :param i: The number of the turn
     :return: None
     """
-    print("Turn {} :".format(i+1))
+    print("Turn {} : ".format(i+1), end="")
     player1.play()
     player2.play()
+    print("Player 1 [{}] || Player 2 [{}]".format(player1.choice[-1],player2.choice[-1]))
     gain(player1, player2)
 
 
@@ -57,15 +58,19 @@ def gain(p1: Player, p2: Player):
     :return: None
     """
     if p1.choice[-1] == p2.choice[-1] == "C":
+        print("Player 1 [+3] || Player 2 [+3]\n")
         p1.score += 3
         p2.score += 3
     elif p1.choice[-1] == p2.choice[-1] == "B":
+        print("Player 1 [+0] || Player 2 [+0]\n")
         p1.score += 0
         p2.score += 0
     elif p1.choice[-1] == "C":
+        print("Player 1 [-1] || Player 2 [+3]\n")
         p1.score += -1
         p2.score += 3
     else:
+        print("Player 1 [+3] || Player 2 [-1]\n")
         p1.score += 3
         p2.score += -1
 
@@ -85,6 +90,8 @@ def main():
     while num_turn < max_num_turn:
         turn(player1, player2, num_turn)
         num_turn += 1
+
+    print("Player 1 as a score of {}\nPlayer 2 as a score of {}".format(player1.score, player2.score))
 
 
 main()
