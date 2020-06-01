@@ -6,5 +6,5 @@ class AllCheat(Player):
         Player.__init__(self)
         self.name = "AllCheat"
 
-    def play(self):
+    def play(self, otherChoice):
         self.choice.append('B')

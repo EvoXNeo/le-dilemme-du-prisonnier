@@ -6,5 +6,5 @@ class AllCooperate(Player):
         Player.__init__(self)
         self.name = "AllCooperate"
 
-    def play(self):
+    def play(self, otherChoice):
         self.choice.append('C')

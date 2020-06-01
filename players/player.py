@@ -4,7 +4,7 @@ class Player:
         self.score = 0
         self.choice = list()
 
-    def play(self):
+    def play(self, otherChoice):
         return
 
     def __str__(self):

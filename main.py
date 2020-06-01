@@ -44,8 +44,12 @@ def turn(player1: Player, player2: Player, i: int):
     :return: None
     """
     print("Turn {} : ".format(i+1), end="")
-    player1.play()
-    player2.play()
+    if i == 0:
+        player1.play('C')
+        player2.play('C')
+    else :
+        player1.play(player2.choice[-1])
+        player2.play(player1.choice[-1])
     print("Player 1 [{}] || Player 2 [{}]".format(player1.choice[-1],player2.choice[-1]))
     gain(player1, player2)
 
@@ -91,7 +95,7 @@ def main():
         turn(player1, player2, num_turn)
         num_turn += 1
 
-    print("Player 1 as a score of {}\nPlayer 2 as a score of {}".format(player1.score, player2.score))
+    print("Player 1 got a score of {}\nPlayer 2 got a score of {}".format(player1.score, player2.score))
 
 
 main()
