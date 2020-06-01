@@ -62,9 +62,9 @@ def gain(p1: Player, p2: Player):
     :return: None
     """
     if p1.choice[-1] == p2.choice[-1] == "C":
-        print("Player 1 [+3] || Player 2 [+3]\n")
-        p1.score += 3
-        p2.score += 3
+        print("Player 1 [+2] || Player 2 [+2]\n")
+        p1.score += 2
+        p2.score += 2
     elif p1.choice[-1] == p2.choice[-1] == "B":
         print("Player 1 [+0] || Player 2 [+0]\n")
         p1.score += 0
