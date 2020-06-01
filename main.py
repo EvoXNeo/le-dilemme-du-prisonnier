@@ -10,18 +10,19 @@ from players.detective import Detective
 from players.grudger import Grudger
 
 
-def choosePlayer(number: str, size: int) -> Player:
+def choosePlayer(size: int, number = "") -> Player:
     """Return a player selected by the user
 
     :param number: The number of the player
     :param size: The number of different player playable
     :return:
     """
-    print('--> Choose player ' + number + ':')
-    player = int(input())
-    while player < 0 or player >= size:
-        print("You should enter a number between 0 and " + str(size - 1))
-        player = int(input())
+    if number != "":
+        print('--> Choose player ' + number + ':')
+        player = checkIntInput(0, size - 1)
+    else :
+        player = size
+
     if player == 0:
         player = AllCheat()
     elif player == 1:
@@ -73,7 +74,7 @@ def fastTurn(player1: Player, player2 : Player, max_turn : int):
         gain(player1, player2, False)
         n+= 1
 
-    print("Player 1 (", player1.name, ") : ", player1.score, "\nPlayer 2 (", player2.name, ") : {}\n".format(player2.score))
+    print("Player 1 (", player1.name, ") : ", player1.get_score(), "\nPlayer 2 (", player2.name, ") : {}\n".format(player2.get_score()))
 
 
 def gain(p1: Player, p2: Player, printTrace=True):
@@ -87,26 +88,26 @@ def gain(p1: Player, p2: Player, printTrace=True):
         if printTrace :
             print("Player 1 [+2] || Player 2 [+2]\n")
 
-        p1.score += 2
-        p2.score += 2
+        p1.set_score(2)
+        p2.set_score(2)
     elif p1.choice[-1] == p2.choice[-1] == "B":
         if printTrace :
             print("Player 1 [+0] || Player 2 [+0]\n")
 
-        p1.score += 0
-        p2.score += 0
+        p1.set_score(0)
+        p2.set_score(0)
     elif p1.choice[-1] == "C":
         if printTrace :
             print("Player 1 [-1] || Player 2 [+3]\n")
 
-        p1.score += -1
-        p2.score += 3
+        p1.set_score(-1)
+        p2.set_score(3)
     else:
         if printTrace :
             print("Player 1 [+3] || Player 2 [-1]\n")
 
-        p1.score += 3
-        p2.score += -1
+        p1.set_score(3)
+        p2.set_score(-1)
 
 def chooseMode() -> int:
     """Choose the application's mode that will be executed 
@@ -127,10 +128,15 @@ def checkIntInput(min : int, max : int):
 
     :return: a valid value of the input 
     """
-    var = int(input())
+    
+    var = -1
+    print("max : ", max)
     while var < min or var > max :
-        print("Please enter a number between", min, "and", max)
-        var = int(input())
+        try:
+            var = int(input())
+        except ValueError:
+            print('Please enter an integer between', min, 'and', max)
+            
     return var
 
 def chooseListOfPlayer(players : list()) -> list():
@@ -150,7 +156,10 @@ def chooseListOfPlayer(players : list()) -> list():
         for p in players :
             print("How many", p.name, "do you want ?")
             tmpNb = checkIntInput(0, sizeLeft)
-            tmpList = [p] * tmpNb
+            print("tmpNb:{} index: {} sizeleft : {}".format(tmpNb, players.index(p), sizeLeft))
+            tmpList = list()
+            for i in range(tmpNb):
+                tmpList.append(choosePlayer(players.index(p)))
             playerList.extend(tmpList)
             sizeLeft = nbPlayer - len(playerList)
             if sizeLeft == 0 :
@@ -179,25 +188,28 @@ def main():
         
         mode = chooseMode()
         if mode == 0 :
-            player1 = choosePlayer("1", sizePlayers)
-            player2 = choosePlayer("2", sizePlayers)
+            player1 = choosePlayer(sizePlayers, "1")
+            player2 = choosePlayer(sizePlayers, "2")
 
             while num_turn < max_num_turn:
                 turn(player1, player2, num_turn)
                 num_turn += 1
 
-            print("Player 1 (", player1.name, ") got a score of {}\nPlayer 2 (".format(player1.score), player2.name, ") got a score of {}\n".format(player2.score))
+            print("Player 1 (", player1.name, ") got a score of {}\nPlayer 2 (".format(player1.get_score()), player2.name, ") got a score of {}\n".format(player2.get_score()))
         else :
             playersList = chooseListOfPlayer(players)
             print("\nStart of Tournament : \n")
-            i = 0
-            while i < len(playersList) - 1:
-                fastTurn(playersList[i], playersList[i + 1], max_num_turn)
-                i += 1
+            i = len(playersList)
+            while i > 1:
+                i -= 1
+                tmpList = playersList[:i]
+                for p in tmpList :
+                    fastTurn(playersList[i], p, max_num_turn)
+                
             print("\nResults of tournament :\n")
             i = 0
             for p in playersList :
-                print("Player ", i + 1, "(", playersList[i].name, ") : ", playersList[i].score)
+                print("Player ", i + 1, "(", p.name, ") : ", p.get_score())
                 i += 1
 
         print("\nYou can quit with q, or start again with any other key")  
