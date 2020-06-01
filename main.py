@@ -53,8 +53,30 @@ def turn(player1: Player, player2: Player, i: int):
     print("Player 1 [{}] || Player 2 [{}]".format(player1.choice[-1],player2.choice[-1]))
     gain(player1, player2)
 
+def fastTurn(player1: Player, player2 : Player, max_turn : int):
+    """Play all the turns between two player without printing trace
 
-def gain(p1: Player, p2: Player):
+    :param player1: Player 1
+    :param player2: Player 2
+    :param max_turn: The number of turn of a confrontation
+
+    :return: None
+    """
+    n = 0
+    while n < max_turn :
+        if n == 0:
+            player1.play('C')
+            player2.play('C')
+        else :
+            player1.play(player2.choice[-1])
+            player2.play(player1.choice[-1])    
+        gain(player1, player2, False)
+        n+= 1
+
+    print("Player 1 (", player1.name, ") : ", player1.score, "\nPlayer 2 (", player2.name, ") : {}\n".format(player2.score))
+
+
+def gain(p1: Player, p2: Player, printTrace=True):
     """Give gain to each player with their last turn decision
 
     :param p1: Player 1
@@ -62,40 +84,125 @@ def gain(p1: Player, p2: Player):
     :return: None
     """
     if p1.choice[-1] == p2.choice[-1] == "C":
-        print("Player 1 [+2] || Player 2 [+2]\n")
+        if printTrace :
+            print("Player 1 [+2] || Player 2 [+2]\n")
+
         p1.score += 2
         p2.score += 2
     elif p1.choice[-1] == p2.choice[-1] == "B":
-        print("Player 1 [+0] || Player 2 [+0]\n")
+        if printTrace :
+            print("Player 1 [+0] || Player 2 [+0]\n")
+
         p1.score += 0
         p2.score += 0
     elif p1.choice[-1] == "C":
-        print("Player 1 [-1] || Player 2 [+3]\n")
+        if printTrace :
+            print("Player 1 [-1] || Player 2 [+3]\n")
+
         p1.score += -1
         p2.score += 3
     else:
-        print("Player 1 [+3] || Player 2 [-1]\n")
+        if printTrace :
+            print("Player 1 [+3] || Player 2 [-1]\n")
+
         p1.score += 3
         p2.score += -1
 
+def chooseMode() -> int:
+    """Choose the application's mode that will be executed 
+
+    :return:    0 for one-on-one
+                1 for tournament
+    """
+    print("\nDo you want to play a tournament or a one-on-one (enter 't' for tournament, anything else for a one-one-one")
+    if input() == 't':
+        return 1
+    return 0
+
+def checkIntInput(min : int, max : int):
+    """Get the input then return it only if it is between the 2 arguments
+    
+    :param min: the minimum for the value 
+    :param max: the maximum for the value 
+
+    :return: a valid value of the input 
+    """
+    var = int(input())
+    while var < min or var > max :
+        print("Please enter a number between", min, "and", max)
+        var = int(input())
+    return var
+
+def chooseListOfPlayer(players : list()) -> list():
+    """ Ask to the user how many and which players he wants for the tournament
+
+    :param players: the list of the possible players
+
+    :return: a list with the right number of players to do the tournament
+    """
+    playerList = list()
+    print("How many players do you want ?")
+    nbPlayer = checkIntInput(2, 50)
+    sizeLeft = nbPlayer
+    stopLoop = False
+    
+    while not stopLoop :
+        for p in players :
+            print("How many", p.name, "do you want ?")
+            tmpNb = checkIntInput(0, sizeLeft)
+            tmpList = [p] * tmpNb
+            playerList.extend(tmpList)
+            sizeLeft = nbPlayer - len(playerList)
+            if sizeLeft == 0 :
+                print("All player attributed")
+                return playerList
+            else :
+                print(sizeLeft, "players left")
+        if sizeLeft > 0 :
+            print("You still have ", sizeLeft, "players available\nDo you want to assign them ? (y/n)")
+            if input() != 'y' :
+                stopLoop = True
+
+    return playerList
 
 def main():
+    isEndOfGame = False
     players = [AllCheat(), AllCooperate(), Copycat(), Detective(), Grudger()]
     sizePlayers = len(players)
     num_turn = 0
-    max_num_turn = 10
+    print("Welcome to this simulation of the prisonner's game\n\nLet's begin with our players :")
+    while not isEndOfGame :
+        print("How many turn per match do you want ? ")
+        max_num_turn = checkIntInput(1, 20)
+        for i in range(sizePlayers):
+            print(i, "- {}".format(players[i]))
+        
+        mode = chooseMode()
+        if mode == 0 :
+            player1 = choosePlayer("1", sizePlayers)
+            player2 = choosePlayer("2", sizePlayers)
 
-    for i in range(sizePlayers):
-        print(i, "- {}".format(players[i]))
+            while num_turn < max_num_turn:
+                turn(player1, player2, num_turn)
+                num_turn += 1
 
-    player1 = choosePlayer("1", sizePlayers)
-    player2 = choosePlayer("2", sizePlayers)
+            print("Player 1 (", player1.name, ") got a score of {}\nPlayer 2 (".format(player1.score), player2.name, ") got a score of {}\n".format(player2.score))
+        else :
+            playersList = chooseListOfPlayer(players)
+            print("\nStart of Tournament : \n")
+            i = 0
+            while i < len(playersList) - 1:
+                fastTurn(playersList[i], playersList[i + 1], max_num_turn)
+                i += 1
+            print("\nResults of tournament :\n")
+            i = 0
+            for p in playersList :
+                print("Player ", i + 1, "(", playersList[i].name, ") : ", playersList[i].score)
+                i += 1
 
-    while num_turn < max_num_turn:
-        turn(player1, player2, num_turn)
-        num_turn += 1
-
-    print("Player 1 got a score of {}\nPlayer 2 got a score of {}".format(player1.score, player2.score))
-
+        print("\nYou can quit with q, or start again with any other key")  
+        if input() == 'q' :
+            isEndOfGame = True
+        num_turn = 0
 
 main()
