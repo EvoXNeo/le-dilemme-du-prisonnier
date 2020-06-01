@@ -18,3 +18,6 @@ class Grudger(Player):
         else :
             self.choice.append('C')
 
+    def reset(self):
+        Player.reset(self)
+        self.__grudge = False

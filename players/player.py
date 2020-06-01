@@ -7,6 +7,10 @@ class Player:
     def play(self, otherChoice):
         return
 
+    def reset(self):
+        self.choice[:] = []
+        return
+
     def __str__(self):
         return self.name
 

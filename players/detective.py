@@ -23,3 +23,7 @@ class Detective(Player):
                 Copycat.play(self, otherChoice)
             else :
                 AllCheat.play(self, otherChoice)
+
+    def reset(self):
+        Player.reset(self)
+        self.__actLikeCopycat = False

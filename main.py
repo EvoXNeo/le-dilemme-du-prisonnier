@@ -71,10 +71,13 @@ def fastTurn(player1: Player, player2 : Player, max_turn : int):
         else :
             player1.play(player2.choice[-1])
             player2.play(player1.choice[-1])    
-        gain(player1, player2, False)
+        gain(player1, player2)
         n+= 1
 
-    print("Player 1 (", player1.name, ") : ", player1.get_score(), "\nPlayer 2 (", player2.name, ") : {}\n".format(player2.get_score()))
+    print("Player", player1.name, ":", player1.get_score(), "\nPlayer {} : {}\n".format(player2.name, player2.get_score()))
+    # Empty the players' list of choice for next match
+    player1.reset()
+    player2.reset()
 
 
 def gain(p1: Player, p2: Player, printTrace=True):
@@ -187,7 +190,7 @@ def main():
             print(i, "- {}".format(players[i]))
         
         mode = chooseMode()
-        if mode == 0 :
+        if mode == 0 : # one-on-one
             player1 = choosePlayer(sizePlayers, "1")
             player2 = choosePlayer(sizePlayers, "2")
 
@@ -196,7 +199,7 @@ def main():
                 num_turn += 1
 
             print("Player 1 (", player1.name, ") got a score of {}\nPlayer 2 (".format(player1.get_score()), player2.name, ") got a score of {}\n".format(player2.get_score()))
-        else :
+        else : # tournament
             playersList = chooseListOfPlayer(players)
             print("\nStart of Tournament : \n")
             i = len(playersList)
