@@ -8,7 +8,8 @@ from players.allcooperate import AllCooperate
 from players.copycat import Copycat
 from players.detective import Detective
 from players.grudger import Grudger
-
+from players.copykitten import Copykitten
+from players.gradual import Gradual
 
 def choosePlayer(size: int, number = "") -> Player:
     """Return a player selected by the user
@@ -33,6 +34,10 @@ def choosePlayer(size: int, number = "") -> Player:
         player = Detective()
     elif player == 4:
         player = Grudger()
+    elif player == 5:
+        player = Copykitten()
+    elif player == 6:
+        player = Gradual()
     return player
 
 
@@ -118,7 +123,7 @@ def chooseMode() -> int:
     :return:    0 for one-on-one
                 1 for tournament
     """
-    print("\nDo you want to play a tournament or a one-on-one (enter 't' for tournament, anything else for a one-one-one")
+    print("\nDo you want to play a tournament or a one-on-one (enter 't' for tournament, anything else for a one-on-one")
     if input() == 't':
         return 1
     return 0
@@ -133,7 +138,6 @@ def checkIntInput(min : int, max : int):
     """
     
     var = -1
-    print("max : ", max)
     while var < min or var > max :
         try:
             var = int(input())
@@ -179,13 +183,13 @@ def chooseListOfPlayer(players : list()) -> list():
 
 def main():
     isEndOfGame = False
-    players = [AllCheat(), AllCooperate(), Copycat(), Detective(), Grudger()]
+    players = [AllCheat(), AllCooperate(), Copycat(), Detective(), Grudger(), Copykitten(), Gradual()]
     sizePlayers = len(players)
     num_turn = 0
     print("Welcome to this simulation of the prisonner's game\n\nLet's begin with our players :")
     while not isEndOfGame :
         print("How many turn per match do you want ? ")
-        max_num_turn = checkIntInput(1, 20)
+        max_num_turn = checkIntInput(1, 50)
         for i in range(sizePlayers):
             print(i, "- {}".format(players[i]))
         

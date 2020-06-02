@@ -2,6 +2,7 @@ from players.player import Player
 
 
 class Copycat(Player):
+    # Start by cooperating then copy the previous move of his adversary
     def __init__(self):
         Player.__init__(self)
         self.name = "Copycat"

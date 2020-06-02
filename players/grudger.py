@@ -2,6 +2,7 @@ from players.player import Player
 
 
 class Grudger(Player):
+    # Cooperate until the first time he's betrayed, then betray until the end 
     def __init__(self):
         Player.__init__(self)
         self.name = "Grudger"

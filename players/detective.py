@@ -3,6 +3,9 @@ from players.copycat import Copycat
 from players.allcheat import AllCheat
 
 class Detective(Player):
+    # Analyze the behaviour of the other during the first turns 
+    # if the other betray once, act like copycat after the analysis
+    # if not, exploit it by always betraying
     def __init__(self):
         Player.__init__(self)
         self.name = "Detective"
@@ -11,8 +14,8 @@ class Detective(Player):
     def play(self, otherChoice):
         if len(self.choice) == 0:
             self.choice.append('C')
-        elif len(self.choice) < 4: # analyze the behaviour of the other during the first turns 
-            if 'B' == otherChoice: # if the other betray once, act like copycat after the analysis
+        elif len(self.choice) < 4: 
+            if 'B' == otherChoice: 
                 self.__actLikeCopycat = True
             if len(self.choice) == 1:
                 self.choice.append('B')
