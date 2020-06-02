@@ -11,7 +11,7 @@ class Detective(Player):
         self.name = "Detective"
         self.__actLikeCopycat = False
 
-    def play(self, otherChoice):
+    def play(self, otherChoice, mistakeRate):
         if len(self.choice) == 0:
             self.choice.append('C')
         elif len(self.choice) < 4: 
@@ -23,9 +23,12 @@ class Detective(Player):
                 self.choice.append('C')         
         else :
             if self.__actLikeCopycat :
-                Copycat.play(self, otherChoice)
+                Copycat.play(self, otherChoice, mistakeRate)
             else :
-                AllCheat.play(self, otherChoice)
+                self.choice.append('B')
+
+        Player.apply_mistake_rate(self, mistakeRate)
+
 
     def reset(self):
         Player.reset(self)

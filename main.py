@@ -10,6 +10,7 @@ from players.detective import Detective
 from players.grudger import Grudger
 from players.copykitten import Copykitten
 from players.gradual import Gradual
+from players.simpleton import Simpleton
 
 def choosePlayer(size: int, number = "") -> Player:
     """Return a player selected by the user
@@ -38,10 +39,12 @@ def choosePlayer(size: int, number = "") -> Player:
         player = Copykitten()
     elif player == 6:
         player = Gradual()
+    elif player == 7:
+        player = Simpleton()    
     return player
 
 
-def turn(player1: Player, player2: Player, i: int):
+def turn(player1: Player, player2: Player, i: int, mistakeRate: int):
     """Play one turn between two player
 
     :param player1: Player 1
@@ -51,15 +54,15 @@ def turn(player1: Player, player2: Player, i: int):
     """
     print("Turn {} : ".format(i+1), end="")
     if i == 0:
-        player1.play('C')
-        player2.play('C')
+        player1.play('C', mistakeRate)
+        player2.play('C', mistakeRate)
     else :
-        player1.play(player2.choice[-1])
-        player2.play(player1.choice[-1])
+        player1.play(player2.choice[-1], mistakeRate)
+        player2.play(player1.choice[-2], mistakeRate)
     print("Player 1 [{}] || Player 2 [{}]".format(player1.choice[-1],player2.choice[-1]))
     gain(player1, player2)
 
-def fastTurn(player1: Player, player2 : Player, max_turn : int):
+def fastTurn(player1: Player, player2 : Player, max_turn : int, mistakeRate: int):
     """Play all the turns between two player without printing trace
 
     :param player1: Player 1
@@ -71,11 +74,11 @@ def fastTurn(player1: Player, player2 : Player, max_turn : int):
     n = 0
     while n < max_turn :
         if n == 0:
-            player1.play('C')
-            player2.play('C')
+            player1.play('C', mistakeRate)
+            player2.play('C', mistakeRate)
         else :
-            player1.play(player2.choice[-1])
-            player2.play(player1.choice[-1])    
+            player1.play(player2.choice[-1], mistakeRate)
+            player2.play(player1.choice[-2], mistakeRate)    
         gain(player1, player2)
         n+= 1
 
@@ -163,7 +166,6 @@ def chooseListOfPlayer(players : list()) -> list():
         for p in players :
             print("How many", p.name, "do you want ?")
             tmpNb = checkIntInput(0, sizeLeft)
-            print("tmpNb:{} index: {} sizeleft : {}".format(tmpNb, players.index(p), sizeLeft))
             tmpList = list()
             for i in range(tmpNb):
                 tmpList.append(choosePlayer(players.index(p)))
@@ -183,23 +185,24 @@ def chooseListOfPlayer(players : list()) -> list():
 
 def main():
     isEndOfGame = False
-    players = [AllCheat(), AllCooperate(), Copycat(), Detective(), Grudger(), Copykitten(), Gradual()]
+    players = [AllCheat(), AllCooperate(), Copycat(), Detective(), Grudger(), Copykitten(), Gradual(), Simpleton()]
     sizePlayers = len(players)
     num_turn = 0
     print("Welcome to this simulation of the prisonner's game\n\nLet's begin with our players :")
     while not isEndOfGame :
         print("How many turn per match do you want ? ")
         max_num_turn = checkIntInput(1, 50)
+        print("How high you want the chance of mistakes to be (in %) ?")
+        mistake_rate = checkIntInput(0, 50)
         for i in range(sizePlayers):
             print(i, "- {}".format(players[i]))
-        
         mode = chooseMode()
         if mode == 0 : # one-on-one
             player1 = choosePlayer(sizePlayers, "1")
             player2 = choosePlayer(sizePlayers, "2")
 
             while num_turn < max_num_turn:
-                turn(player1, player2, num_turn)
+                turn(player1, player2, num_turn, mistake_rate)
                 num_turn += 1
 
             print("Player 1 (", player1.name, ") got a score of {}\nPlayer 2 (".format(player1.get_score()), player2.name, ") got a score of {}\n".format(player2.get_score()))
@@ -211,7 +214,7 @@ def main():
                 i -= 1
                 tmpList = playersList[:i]
                 for p in tmpList :
-                    fastTurn(playersList[i], p, max_num_turn)
+                    fastTurn(playersList[i], p, max_num_turn, mistake_rate)
                 
             print("\nResults of tournament :\n")
             i = 0

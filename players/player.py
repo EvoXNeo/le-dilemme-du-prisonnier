@@ -1,11 +1,20 @@
+import random
+
 class Player:
     def __init__(self):
         self.name = ""
         self.__score = 0
         self.choice = list()
 
-    def play(self, otherChoice):
+    def play(self, otherChoice, mistakeRate):
         return
+
+    def apply_mistake_rate(self, mistake_rate):
+        if int(random.random()*100) < mistake_rate :
+            if self.choice[-1] == 'B':
+                self.choice[-1] = 'C'
+            else :
+                self.choice[-1] = 'B'
 
     def reset(self):
         self.choice[:] = []

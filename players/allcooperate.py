@@ -7,5 +7,6 @@ class AllCooperate(Player):
         Player.__init__(self)
         self.name = "AllCooperate"
 
-    def play(self, otherChoice):
+    def play(self, otherChoice, mistakeRate):
         self.choice.append('C')
+        Player.apply_mistake_rate(self, mistakeRate)

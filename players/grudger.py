@@ -1,6 +1,5 @@
 from players.player import Player
 
-
 class Grudger(Player):
     # Cooperate until the first time he's betrayed, then betray until the end 
     def __init__(self):
@@ -8,7 +7,7 @@ class Grudger(Player):
         self.name = "Grudger"
         self.__grudge = False
 
-    def play(self, otherChoice):
+    def play(self, otherChoice, mistakeRate):
         if len(self.choice) == 0 :
             self.choice.append('C')
         else :
@@ -18,6 +17,10 @@ class Grudger(Player):
             self.choice.append('B')
         else :
             self.choice.append('C')
+            
+        Player.apply_mistake_rate(self, mistakeRate)
+
+
 
     def reset(self):
         Player.reset(self)

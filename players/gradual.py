@@ -11,7 +11,7 @@ class Gradual(Player):
         self.__grudgeCount = 0
         self.__isOnGrudge = False
 
-    def play(self, otherChoice):
+    def play(self, otherChoice, mistakeRate):
         if self.__isOnGrudge :
             if self.__grudgeCount == 0:
                 self.__grudgeCount = -2
@@ -34,6 +34,8 @@ class Gradual(Player):
                 if self.__grudgeCount < 0: # update the count of forgiveness turns 
                     self.__grudgeCount += 1
                 self.choice.append('C')
+
+        Player.apply_mistake_rate(self, mistakeRate)
 
     def startGrudge(self):
         self.__isOnGrudge = True

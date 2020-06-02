@@ -9,7 +9,7 @@ class Copykitten(Player):
         self.name = "Copykitten"
         self.__wasBetrayed = False
 
-    def play(self, otherChoice):
+    def play(self, otherChoice, mistakeRate):
         if otherChoice == 'B':
             if self.__wasBetrayed :
                 self.choice.append('B')
@@ -20,6 +20,8 @@ class Copykitten(Player):
             if self.__wasBetrayed:
                 self.__wasBetrayed = False
             self.choice.append('C')
+        
+        Player.apply_mistake_rate(self, mistakeRate)
 
     def reset(self):
         Player.reset(self)
