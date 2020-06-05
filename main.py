@@ -125,7 +125,7 @@ def chooseMode() -> int:
                 1 for tournament
                 2 for ecological competition
     """
-    print("\nDo you want to play a one-on-one (0), a simple tournament (1) or an ecological competition (2) ? (enter 0, 1 or 2)")
+    print("\nChoose the mode you want to play :\n\n\t0. One-on-one\n\n\t1. Simple tournament : Choose the number of player and their repartition, then each one will do a one-on-one with all the others\n\n\t2. Ecological competition : Multiple tournament where the 20% better players are replicated and 20% worst are eliminated at the end of each tournament.\n\n\n Enter 0, 1 or 2")
     return checkIntInput(0, 2)
 
 def checkIntInput(min : int, max : int):
