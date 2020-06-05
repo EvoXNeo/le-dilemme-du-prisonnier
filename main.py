@@ -79,7 +79,7 @@ def fastTurn(player1: Player, player2 : Player, max_turn : int, mistakeRate: int
         else :
             player1.play(player2.choice[-1], mistakeRate)
             player2.play(player1.choice[-2], mistakeRate)    
-        gain(player1, player2)
+        gain(player1, player2, False)
         n+= 1
 
     print("Player", player1.name, ":", player1.get_score(), "\nPlayer {} : {}\n".format(player2.name, player2.get_score()))
@@ -99,37 +99,34 @@ def gain(p1: Player, p2: Player, printTrace=True):
         if printTrace :
             print("Player 1 [+2] || Player 2 [+2]\n")
 
-        p1.set_score(2)
-        p2.set_score(2)
+        p1.set_score(p1.get_score() + 2)
+        p2.set_score(p2.get_score() + 2)
     elif p1.choice[-1] == p2.choice[-1] == "B":
         if printTrace :
             print("Player 1 [+0] || Player 2 [+0]\n")
 
-        p1.set_score(0)
-        p2.set_score(0)
     elif p1.choice[-1] == "C":
         if printTrace :
             print("Player 1 [-1] || Player 2 [+3]\n")
 
-        p1.set_score(-1)
-        p2.set_score(3)
+        p1.set_score(p1.get_score() - 1)
+        p2.set_score(p2.get_score() + 3)
     else:
         if printTrace :
             print("Player 1 [+3] || Player 2 [-1]\n")
 
-        p1.set_score(3)
-        p2.set_score(-1)
+        p1.set_score(p1.get_score() + 3)
+        p2.set_score(p2.get_score() - 1)
 
 def chooseMode() -> int:
     """Choose the application's mode that will be executed 
 
     :return:    0 for one-on-one
                 1 for tournament
+                2 for ecological competition
     """
-    print("\nDo you want to play a tournament or a one-on-one (enter 't' for tournament, anything else for a one-on-one")
-    if input() == 't':
-        return 1
-    return 0
+    print("\nDo you want to play a one-on-one (0), a simple tournament (1) or an ecological competition (2) ? (enter 0, 1 or 2)")
+    return checkIntInput(0, 2)
 
 def checkIntInput(min : int, max : int):
     """Get the input then return it only if it is between the 2 arguments
@@ -183,6 +180,39 @@ def chooseListOfPlayer(players : list()) -> list():
 
     return playerList
 
+def playTournament(playersList : list,  max_num_turn : int, mistake_rate: int):
+    """ Make all the players in playersList have a one-on-one with each other to carry on a tournament
+
+    :param playersList : The list containing all the tournament's player
+    :param max_num_turn : The number of turn of each match
+    :param mistake_rate : The number (in pourcentage) of chance for the player to do the opposite they want to
+
+    :return: none
+    """
+    i = len(playersList)
+    while i > 1:
+        i -= 1
+        tmpList = playersList[:i]
+        for p in tmpList :
+            fastTurn(playersList[i], p, max_num_turn, mistake_rate)
+
+    
+    playersList.sort(key = Player.get_score)
+    print("\nResults of tournament :\n")
+    i = 0
+    for p in playersList :
+        print("Player ", i + 1, "(", p.name, ") : ", p.get_score())
+        i += 1
+
+def updatePopulation(playersList : list):
+    length = len(playersList) - 1
+    for i in range(int(length / 5)):
+        playersList[i] = type(playersList[length - i])()
+
+    for p in playersList :
+        p.set_score(0)
+
+
 def main():
     isEndOfGame = False
     players = [AllCheat(), AllCooperate(), Copycat(), Detective(), Grudger(), Copykitten(), Gradual(), Simpleton()]
@@ -208,19 +238,21 @@ def main():
             print("Player 1 (", player1.name, ") got a score of {}\nPlayer 2 (".format(player1.get_score()), player2.name, ") got a score of {}\n".format(player2.get_score()))
         else : # tournament
             playersList = chooseListOfPlayer(players)
-            print("\nStart of Tournament : \n")
-            i = len(playersList)
-            while i > 1:
-                i -= 1
-                tmpList = playersList[:i]
-                for p in tmpList :
-                    fastTurn(playersList[i], p, max_num_turn, mistake_rate)
-                
-            print("\nResults of tournament :\n")
-            i = 0
-            for p in playersList :
-                print("Player ", i + 1, "(", p.name, ") : ", p.get_score())
-                i += 1
+            if mode == 1 :
+                print("\nStart of Tournament : \n")
+                playTournament(playersList, max_num_turn, mistake_rate)
+            else : # Ecological competition
+                print("\nStart of Ecological competition :\n")
+                mustEnd = False
+                while(not mustEnd) :
+                    playTournament(playersList, max_num_turn, mistake_rate)
+                    updatePopulation(playersList)
+                    print("\nDo you wish to continue ? (y/n)\n")
+                    choice = input()
+                    if choice != 'n' and choice != 'y':
+                        print("\nPlease enter y or n\n")
+                    elif choice == 'n' :
+                        mustEnd = True
 
         print("\nYou can quit with q, or start again with any other key")  
         if input() == 'q' :

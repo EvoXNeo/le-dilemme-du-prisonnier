@@ -27,4 +27,4 @@ class Player:
         return self.__score
 
     def set_score(self, score : int):
-        self.__score += score
+        self.__score = score
