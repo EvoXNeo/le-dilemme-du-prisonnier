@@ -125,7 +125,7 @@ def chooseMode() -> int:
                 1 for tournament
                 2 for ecological competition
     """
-    print("\nChoose the mode you want to play :\n\n\t0. One-on-one\n\n\t1. Simple tournament : Choose the number of player and their repartition, then each one will do a one-on-one with all the others\n\n\t2. Ecological competition : Multiple tournament where the 20% better players are replicated and 20% worst are eliminated at the end of each tournament.\n\n\n Enter 0, 1 or 2")
+    print("\nChoose the mode you want to play :\n\n\t0. One-on-one\n\n\t1. Simple tournament : Choose the number of player and their repartition, then each one will do a one-on-one with all the others\n\n\t2. Ecological competition : Multiple tournament where the 20% better players are replicated and the 20% worst are eliminated at the end of each tournament.\n\n\n Enter 0, 1 or 2")
     return checkIntInput(0, 2)
 
 def checkIntInput(min : int, max : int):
@@ -138,13 +138,15 @@ def checkIntInput(min : int, max : int):
     """
     
     var = -1
-    while var < min or var > max :
+    while 1:
         try:
             var = int(input())
+            if min <= var and var <= max:
+                return var
+
+            print('Please enter an integer between', min, 'and', max)
         except ValueError:
             print('Please enter an integer between', min, 'and', max)
-            
-    return var
 
 def chooseListOfPlayer(players : list()) -> list():
     """ Ask to the user how many and which players he wants for the tournament
