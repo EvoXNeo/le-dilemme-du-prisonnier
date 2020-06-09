@@ -13,17 +13,13 @@ class Simpleton(Player):
         else : 
             if otherChoice == 'B':
                 if self.choice[-1] == 'B':
-                    print("AAAAAAAAA")
                     self.choice.append('C')
                 else :
-                    print("BBBBBBBBBBB")
                     self.choice.append('B')
             else :
                 if self.choice[-1] == 'B':
-                    print("CCCCCCCCCCC")
                     self.choice.append('B')
                 else :
-                    print("DDDDDDDDD")
                     self.choice.append('C')
 
         Player.apply_mistake_rate(self, mistakeRate)
